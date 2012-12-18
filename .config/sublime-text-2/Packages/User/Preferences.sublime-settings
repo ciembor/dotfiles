@@ -1,0 +1,10 @@
+{
+	"active_theme": "Packages/Color Scheme - Default/Monokai-darker.tmTheme",
+	"color_scheme": "Packages/Color Scheme - Default/Monokai.tmTheme",
+	"font_face": "Inconsolata",
+	"font_size": 13,
+	"ignored_packages":
+	[
+		"Vintage"
+	]
+}

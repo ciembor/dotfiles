@@ -1,0 +1,753 @@
+{
+	"folder_history":
+	[
+		"/home/ciembor/projekty/github-rank",
+		"/home/ciembor/projekty"
+	],
+	"last_window_id": 11,
+	"settings":
+	{
+		"new_window_height": 480.0,
+		"new_window_settings":
+		{
+			"auto_complete":
+			{
+				"selected_items":
+				[
+				]
+			},
+			"build_system": "",
+			"command_palette":
+			{
+				"height": 272.0,
+				"selected_items":
+				[
+					[
+						"Package Control: ",
+						"Package Control: Install Package"
+					],
+					[
+						"install ",
+						"Package Control: Install Package"
+					],
+					[
+						"install",
+						"Package Control: Install Package"
+					],
+					[
+						"pack",
+						"Package Control: Install Package"
+					]
+				],
+				"width": 449.0
+			},
+			"console":
+			{
+				"height": 213.0
+			},
+			"distraction_free":
+			{
+				"menu_visible": true,
+				"show_minimap": false,
+				"show_open_files": false,
+				"show_tabs": false,
+				"side_bar_visible": false,
+				"status_bar_visible": false
+			},
+			"file_history":
+			[
+				"/home/ciembor/projekty/WykopAnalytics/frontend/charts.js",
+				"/home/ciembor/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+				"/home/ciembor/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap"
+			],
+			"find":
+			{
+				"height": 34.0
+			},
+			"find_in_files":
+			{
+				"height": 0.0,
+				"where_history":
+				[
+				]
+			},
+			"find_state":
+			{
+				"case_sensitive": false,
+				"find_history":
+				[
+					"tab\n\ntab",
+					"q4",
+					"file",
+					"tree"
+				],
+				"highlight": true,
+				"in_selection": false,
+				"preserve_case": false,
+				"regex": false,
+				"replace_history":
+				[
+				],
+				"reverse": false,
+				"show_context": true,
+				"use_buffer2": true,
+				"whole_word": false,
+				"wrap": true
+			},
+			"incremental_find":
+			{
+				"height": 0.0
+			},
+			"input":
+			{
+				"height": 34.0
+			},
+			"layout":
+			{
+				"cells":
+				[
+					[
+						0,
+						0,
+						1,
+						1
+					],
+					[
+						0,
+						1,
+						1,
+						2
+					]
+				],
+				"cols":
+				[
+					0.0,
+					1.0
+				],
+				"rows":
+				[
+					0.0,
+					0.459826041347,
+					1.0
+				]
+			},
+			"menu_visible": true,
+			"replace":
+			{
+				"height": 0.0
+			},
+			"save_all_on_build": true,
+			"select_file":
+			{
+				"height": 0.0,
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_project":
+			{
+				"height": 0.0,
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"show_minimap": true,
+			"show_open_files": false,
+			"show_tabs": true,
+			"side_bar_visible": true,
+			"side_bar_width": 269.0,
+			"status_bar_visible": true
+		},
+		"new_window_width": 640.0
+	},
+	"windows":
+	[
+		{
+			"auto_complete":
+			{
+				"selected_items":
+				[
+				]
+			},
+			"buffers":
+			[
+				{
+					"contents": "import sublime\nimport sublime_plugin\nimport os\nimport sys\nimport subprocess\nimport locale\n\nif os.name == 'nt':\n    import _winreg\n\n\nclass NotFoundError(Exception):\n    pass\n\n\nclass TerminalSelector():\n    default = None\n\n    @staticmethod\n    def get():\n        settings = sublime.load_settings('Terminal.sublime-settings')\n        package_dir = os.path.join(sublime.packages_path(), __name__)\n\n        terminal = settings.get('terminal')\n        if terminal:\n            dir, executable = os.path.split(terminal)\n            if not dir:\n                joined_terminal = os.path.join(package_dir, executable)\n                if os.path.exists(joined_terminal):\n                    terminal = joined_terminal\n                    if not os.access(terminal, os.X_OK):\n                        os.chmod(terminal, 0755)\n            return terminal\n\n        if TerminalSelector.default:\n            return TerminalSelector.default\n\n        default = None\n\n        if os.name == 'nt':\n            if os.path.exists(os.environ['SYSTEMROOT'] +\n                    '\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe'):\n                # This mimics the default powershell colors since calling\n                # subprocess.POpen() ends up acting like launching powershell\n                # from cmd.exe. Normally the size and color are inherited\n                # from cmd.exe, but this creates a custom mapping, and then\n                # the LaunchPowerShell.bat file adjusts some other settings.\n                key_string = 'Console\\\\%SystemRoot%_system32_' + \\\n                    'WindowsPowerShell_v1.0_powershell.exe'\n                try:\n                    key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER,\n                        key_string)\n                except (WindowsError):\n                    key = _winreg.CreateKey(_winreg.HKEY_CURRENT_USER,\n                        key_string)\n                    _winreg.SetValueEx(key, 'ColorTable05', 0,\n                        _winreg.REG_DWORD, 5645313)\n                    _winreg.SetValueEx(key, 'ColorTable06', 0,\n                        _winreg.REG_DWORD, 15789550)\n                default = os.path.join(package_dir, 'PS.bat')\n            else :\n                default = os.environ['SYSTEMROOT'] + '\\\\System32\\\\cmd.exe'\n\n        elif sys.platform == 'darwin':\n            default = os.path.join(package_dir, 'Terminal.sh')\n            if not os.access(default, os.X_OK):\n                os.chmod(default, 0755)\n\n        else:\n            ps = 'ps -eo comm | grep -E \"gnome-session|ksmserver|' + \\\n                'xfce4-session\" | grep -v grep'\n            wm = [x.replace(\"\\n\", '') for x in os.popen(ps)]\n            if wm:\n                if wm[0] == 'gnome-session':\n                    default = 'gnome-terminal'\n                elif wm[0] == 'xfce4-session':\n                    default = 'terminal'    \n                elif wm[0] == 'ksmserver':\n                    default = 'konsole'\n            if not default:\n                default = 'terminal'\n\n        TerminalSelector.default = default\n        return default\n\n\nclass TerminalCommand():\n    def get_path(self, paths):\n        if paths:\n            return paths[0]\n        elif self.window.active_view():\n            return self.window.active_view().file_name()\n        elif self.window.folders():\n            return self.window.folders()[0]\n        else:\n            sublime.error_message(__name__ + ': No place to open terminal to')\n            return False\n\n    def run_terminal(self, dir, parameters):\n        try:\n            if not dir:\n                raise NotFoundError('The file open in the selected view has ' +\n                    'not yet been saved')\n            for k, v in enumerate(parameters):\n                parameters[k] = v.replace('%CWD%', dir)\n            args = [TerminalSelector.get()]\n            args.extend(parameters)\n            encoding = locale.getpreferredencoding(do_setlocale=True)\n            subprocess.Popen(args, cwd=dir.encode(encoding))\n\n        except (OSError) as (exception):\n            print str(exception)\n            sublime.error_message(__name__ + ': The terminal ' +\n                TerminalSelector.get() + ' was not found')\n        except (Exception) as (exception):\n            sublime.error_message(__name__ + ': ' + str(exception))\n\n\nclass OpenTerminalCommand(sublime_plugin.WindowCommand, TerminalCommand):\n    def run(self, paths=[], parameters=None):\n        path = self.get_path(paths)\n        if not path:\n            return\n\n        if parameters == None:\n            settings = sublime.load_settings('Terminal.sublime-settings')\n            parameters = settings.get('parameters')\n\n        if not parameters:\n            parameters = []\n\n        if os.path.isfile(path):\n            path = os.path.dirname(path)\n\n        self.run_terminal(path, parameters)\n\n\nclass OpenTerminalProjectFolderCommand(sublime_plugin.WindowCommand,\n        TerminalCommand):\n    def run(self, paths=[], parameters=None):\n        path = self.get_path(paths)\n        if not path:\n            return\n\n        folders = [x for x in self.window.folders() if path.find(x) == 0][0:1]\n\n        command = OpenTerminalCommand(self.window)\n        command.run(folders, parameters=parameters)",
+					"file": "/home/ciembor/.config/sublime-text-2/Packages/Terminal/Terminal.py",
+					"file_size": 5385,
+					"file_write_time": 1355762089000000,
+					"settings":
+					{
+						"buffer_size": 5242,
+						"line_ending": "Windows"
+					}
+				},
+				{
+					"file": "/home/ciembor/.config/sublime-text-2/Packages/Git/Git.sublime-settings",
+					"settings":
+					{
+						"buffer_size": 1367,
+						"line_ending": "Unix"
+					}
+				},
+				{
+					"file": "/home/ciembor/.config/sublime-text-2/Packages/Terminal/Default (Linux).sublime-keymap",
+					"settings":
+					{
+						"buffer_size": 139,
+						"line_ending": "Windows"
+					}
+				},
+				{
+					"file": "/home/ciembor/.config/sublime-text-2/Packages/CTags/Default.sublime-keymap",
+					"settings":
+					{
+						"buffer_size": 1514,
+						"line_ending": "Unix"
+					}
+				},
+				{
+					"file": "/home/ciembor/.config/sublime-text-2/Packages/CTags/Default.sublime-mousemap",
+					"settings":
+					{
+						"buffer_size": 254,
+						"line_ending": "Unix"
+					}
+				},
+				{
+					"contents": "{\n	// default_extend_env are used to augment any environment variables\n	// that should be visible for all subporcess repls launched within\n	// SublimeREPL. This is a very good place to add PATH extension\n	// once \"PATH\": \"{PATH}:/home/username/mylocalinstalls/bin\" or whatever\n	\"default_extend_env\": {},\n\n	// Persistent history is stored per REPL external_id, it means that all python\n	// REPLS will share history. If you wish you can disable history altogether\n	\"presistent_history_enabled\": true,\n\n	// By default SublimeREPL leaves REPL view open once the underlying subprocess\n	// dies or closes connection. This is useful when the process dies for an unexpected\n	// reason as it allows you to inspect it output. If you want. Setting this\n	// to true will cause SublimreREPL to close view once the process died.\n	\"view_auto_close\": false,\n\n	// Some terminals output ascii color codes which are not currently supported\n	// enable this option to filter them out.\n	\"filter_ascii_color_codes\": true,\n\n	// Where to look for python virtualenvs\n	\"python_virtualenv_paths\": [\n		\"~/.virtualenvs\",  // virtualenvwrapper\n		\"~/.venv\"  // venv.bash https://github.com/wuub/venv\n	],\n\n	// Use arrows for history navigation instead of Alt+[P|N]/Ctrl+[P|N]\n	\"history_arrows\": true,\n\n	// standard sublime view settings that will be overwritten on each repl view\n	// this has to be customized as a whole dictionary\n	\"repl_view_settings\": {\n		\"translate_tabs_to_spaces\": false,\n		\"auto_indent\": false,\n		\"smart_indent\": false,\n		\"indent_subsequent_lines\": false,\n		\"detect_indentation\": false,\n		\"auto_complete\": true,\n		\"line_numbers\": false,\n		\"gutter\": false\n	},\n\n	// this settings exposes additional variables in repl config files, especially\n	// those related to sublime projects that are not available through standard API\n	// WARNING: this will switch your build system back to Automatic each time a REPL\n	// is started so beware!\n	\"use_build_system_hack\": false\n}\n",
+					"file": "/home/ciembor/.config/sublime-text-2/Packages/SublimeREPL/SublimeREPL.sublime-settings",
+					"file_size": 1955,
+					"file_write_time": 1355768715000000,
+					"settings":
+					{
+						"buffer_size": 1955,
+						"line_ending": "Unix"
+					}
+				},
+				{
+					"file": "/home/ciembor/projekty/4bit/less/main.less",
+					"settings":
+					{
+						"buffer_size": 12787,
+						"line_ending": "Unix"
+					}
+				},
+				{
+					"contents": "/**\n * This is the main script of Terminal Color Scheme Designer\n * author: Maciej Ciemborowicz\n */\n\n// social media ///////////////////////////////////////////////////////////////////////////////////\n\n(function() {\n\n	// facebook button\n	(function(d, s, id) {\n		var js, fjs = d.getElementsByTagName(s)[0];\n		if (d.getElementById(id)) return;\n		js = d.createElement(s); js.id = id;\n		js.src = \"//connect.facebook.net/en_US/all.js#xfbml=1\";\n		fjs.parentNode.insertBefore(js, fjs);\n	}(document, 'script', 'facebook-jssdk'));\n\n	// twitter button\n	!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");\n\n	// google plus button\n	(function() {\n		var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;\n		po.src = 'https://apis.google.com/js/plusone.js';\n		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);\n	})();\n\n})();\n\n// jquery ui vertial radio ////////////////////////////////////////////////////////////////////////\n\n(function( $ ){\n	//plugin buttonset vertical\n	$.fn.buttonsetv = function() {\n		$(':radio, :checkbox', this).wrap('<div style=\"margin: 1px\"/>');\n		$(this).buttonset();\n		$('label:first', this).removeClass('ui-corner-left').addClass('ui-corner-top');\n		$('label:last', this).removeClass('ui-corner-right').addClass('ui-corner-bottom');\n		mw = 0; // max witdh\n		$('label', this).each(function(index){\n			 w = $(this).width();\n			 if (w > mw) mw = w;\n		})\n		$('label', this).each(function(index){\n			$(this).width(mw);\n		})\n	};\n})( jQuery );\n\n// Backbone app ///////////////////////////////////////////////////////////////////////////////////\n\n_4bit = function() {\n\n	goog.require('goog.color');\n\n	/**\n	 * Creates HSL color objects\n	 *\n	 * @param {Number} h	Hue between 0 and 360\n	 * @param {Number} s	Saturation between 0 and 1\n	 * @param {Number} l	Lightness between 0 and 1\n	 *\n	 * @return {Object}	HSL color\n	 */\n	function HSL(h, s, l) {\n		var color = [h, s, l];\n		var dye = [0, 0, 0, 0];	// hsla tint\n\n		getHue = function() {\n			return color[0];\n		}\n\n		getSaturation = function() {\n			return color[1];\n		}\n\n		getLightness = function() {\n			return color[2];\n		}\n\n		setHue = function(h) {\n			color[0] = h;\n		}\n\n		setSaturation = function(s) {\n			color[1] = s;\n		}\n\n		setLightness = function(l) {\n			color[2] = l;\n		}\n\n		setDye = function(hsla) {\n			dye = hsla;\n		}\n\n		setHsl = function(h, s, l) {\n			color = [h, s, l];\n		}\n\n		stringify = function() {\n			var blended = goog.color.hslArrayToRgb(color);\n			var blender = goog.color.hslToRgb(dye[0], dye[1], dye[2]);\n			var factor = dye[3];\n			var rgb = goog.color.blend(blender, blended, factor);\n			return goog.color.rgbArrayToHex(rgb);\n		}\n\n		toRgb = function() {\n			return goog.color.hslArrayToRgb(color);\n		}\n\n		return {\n			getHue: getHue,\n			getSaturation: getSaturation,\n			getLightness: getLightness,\n			setHue: setHue,\n			setSaturation: setSaturation,\n			setLightness: setLightness,\n			setDye: setDye,\n			setHsl: setHsl,\n			toString: stringify,\n			toRgb: toRgb\n		}\n	}\n\n	var COLOR_NAMES = [\n		'black',\n		'bright_black',\n		'red',\n		'bright_red',\n		'green',\n		'bright_green',\n		'yellow',\n		'bright_yellow',\n		'blue',\n		'bright_blue',\n		'magenta',\n		'bright_magenta',\n		'cyan',\n		'bright_cyan',\n		'white',\n		'bright_white'\n	]\n\n	var Scheme = Backbone.Model.extend({\n\n		defaults: {\n			hue: 0,\n			saturation: 0.3,\n			normal_lightness: 0.6,\n			bright_lightness: 0.8,\n			black: [HSL(0, 0, 0), HSL(0, 0, 0.15)],\n			white: [HSL(0, 0, 0.85), HSL(0, 0, 1)],\n			background: HSL(0, 0, 0),\n			foreground: HSL(0, 0, 1)\n		},\n\n		validate: function(params) {\n			var between_zero_and_one = function(variable) {\n				return (!isNaN(variable) && variable >= 0 && variable <= 1) ? true : false;\n			}\n			if (!(params.hue && !isNaN(params.hue) && params.hue >= 0 && params.hue <= 60 && params.hue % 1 === 0 &&\n				params.saturation && between_zero_and_one(params.saturation) &&\n				params.normal_ligthness && between_zero_and_one(params.normal_lightness) &&\n				params.bright_lightness && between_zero_and_one(params.bright_lightness) &&\n				params.bright && (goog.color.isValidHexColor_(params.black) || params.black.toRgb) &&\n				params.white && (goog.color.isValidHexColor_(params.white) || params.white.toRgb) &&\n				params.background && (goog.color.isValidHexColor_(params.background) || params.background.toRgb) &&\n				params.foreground && (goog.color.isValidHexColor_(params.foreground) || params.foreground.toRgb))\n			) {\n				return false;\n			}\n		},\n\n		initialize: function() {\n			var that = this\n			var degrees = [];\n			\n			if (true === this.isValid()) {\n				for (var name in myObject) {\n				  if (myObject.hasOwnProperty(name)) {\n				    alert(name);\n				  }\n				}\n			}\n			\n			for (var i = 0; i < 6; i++) {\n				degrees.push(this.get(\"hue\") + 60 * i);\n			};\n			var normal_array = _.map(degrees, function(degree) {\n				return HSL(that.get('hue') + degree, that.get('saturation'), that.get('normal_lightness'));\n			});\n			var bright_array = _.map(degrees, function(degree) {\n				return HSL(that.get('hue') + degree, that.get('saturation'), that.get('bright_lightness'));\n			});\n\n			this.set({\n				bright: bright_array,\n				normal: normal_array\n			});\n\n			this.set({\n				colors: {\n					background: this.get('background'),\n					foreground: this.get('foreground'),\n					black: this.get('black')[0],\n					bright_black: this.get('black')[1],\n					red: this.get('normal')[0],\n					bright_red: this.get('bright')[0],\n					green: this.get('normal')[2],\n					bright_green: this.get('bright')[2],\n					yellow: this.get('normal')[1],\n					bright_yellow: this.get('bright')[1],\n					blue: this.get('normal')[4],\n					bright_blue: this.get('bright')[4],\n					magenta: this.get('normal')[5],\n					bright_magenta: this.get('bright')[5],\n					cyan: this.get('normal')[3],\n					bright_cyan: this.get('bright')[3],\n					white: this.get('white')[0],\n					bright_white: this.get('white')[1]\n				}\n			});\n		},		\n\n		setHue: function(hue) {\n			this.set('hue', this.get('hue') + hue)\n			_.each([this.get('bright'), this.get('normal')], function(colors) {\n				_.each(colors, function(color) {\n					color.setHue(hue + color.getHue());\n				});\n			});\n			this.trigger('change');\n		},\n\n		setSaturation: function(saturation) {\n			this.set('saturation', saturation)\n			_.each([this.get('bright'), this.get('normal')], function(colors) {\n				_.each(colors, function(color) {\n					color.setSaturation(saturation);\n				});\n			});\n			this.trigger('change');\n		},\n\n		setLightness: function(type, lightness) {\n\n			switch(type) {\n				case 'normal':\n					this.set('normal_lightness', lightness)\n					_.each(this.get('normal'), function(color) {\n						color.setLightness(lightness);\n					});\n					break;\n				case 'bright':\n					this.set('bright_lightness', lightness)\n					_.each(this.get('bright'), function(color) {\n						color.setLightness(lightness);\n					});\n					break;\n				default:\n					this.get('colors')[type].setLightness(lightness);\n			}\n\n			this.trigger('change');\n		},\n\n		dye: function(h, s, l, a, type) {\n			var colors = this.get('colors');\n			var achromatic = [\n				colors.black,\n				colors.bright_black,\n				colors.white,\n				colors.bright_white\n			];\n			var colors_array = [];\n\n			if ('achromatic' === type) {\n				colors_array.push(achromatic);\n			} else if ('color' === type) {\n				colors_array.push(this.get('bright'));\n				colors_array.push(this.get('normal'));\n			} else {\n				colors_array.push(achromatic);\n				colors_array.push(this.get('bright'));\n				colors_array.push(this.get('normal'));\n			}\n\n			this.set('dye', [h, s, l, a]);\n\n			_.each(colors_array, function(colors) {\n				_.each(colors, function(color) {\n					color.setDye([h, s, l, a]);\n				});\n			});\n\n			this.trigger('change');\n		},\n\n		setBackground: function(h, s, l, option) {\n			var background = this.get('background');\n\n			if ('custom' === option) {\n				background.setHsl(h, s, l);\n				this.get('colors')['background'] = background;\n			} else {\n				this.get('colors')['background'] = this.get('colors')[option];\n			}\n\n			this.trigger('change');\n		},\n\n		setForeground: function(h, s, l, option) {\n			var foreground = this.get('foreground');\n\n			if ('custom' === option) {\n				foreground.setHsl(h, s, l);\n				this.get('colors')['foreground'] = foreground;\n			} else {\n				this.get('colors')['foreground'] = this.get('colors')[option];\n			}\n\n			this.trigger('change');\n		},\n		\n		parseParams(params) {\n			\n		}\n\n	});\n	\n	var params = location.search.substring(1);\n	params = JSON.parse('{\"' + decodeURI(params.replace(/&/g, \"\\\",\\\"\").replace(/=/g,\"\\\":\\\"\")) + '\"}');\n	var scheme = new Scheme(params);\n\n	var SchemeView = Backbone.View.extend({\n\n		el: $('#display'),\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			this.render();\n\n			$(\"#advanced\").tabs();\n		},\n\n		render: function() {\n			var string = '';\n			var color_names = ['foreground', 'bright_foreground'];\n			var bg_names = ['background'];\n			var columns_th = [' ', ' ', '40m', '41m', '42m', '43m', '44m', '45m', '46m', '47m'];\n			var rows_th =['m','1m','30m','1;30m','31m','1;31m','32m','1;32m','33m','1;33m','34m','1;34m','35m','1;35m','36m','1;36m','37m','1;37m'];\n			var row_index = 0;\n\n			string += '<p>Welcome to fish, the friendly interactive shell</p>';\n			string += '<p>Type <span class=\"green\">help</span> for instructions on how to use fish</p>'\n			string += '<p><span class=\"cyan\">ciembor</span>@browser <span class=\"cyan\">~</span>> <span class=\"blue\">./colors.sh</span></p>'\n			string += '<br />';\n\n			/* table with colors */\n			string += '<table id=\"colors\">';\n\n			string += '<tr>';\n			_.each(columns_th, function(th) {\n				string += '<th>' + th + '</th>';\n			});\n			string += '</tr>';\n\n			_.each(COLOR_NAMES, function(name) {\n				if (0 !== name.indexOf('bright_')) {\n					bg_names.push(name);\n				}\n				color_names.push(name);\n			});\n\n			_.each(color_names, function(name) {\n				string += '<tr>';\n				string += '<th class=\"row-th\">' + rows_th[row_index] + '</th>';\n				row_index += 1;\n\n				_.each(bg_names, function(bg_name) {\n					string += '<td class=\"';\n					if (0 === name.indexOf('bright_')) {\n						string += 'bold ';\n					}\n					if ('bright_foreground' === name) {\n						string += 'foreground';\n					} else {\n						string += name;\n					}\n					string += ' bg-' + bg_name;\n					string += '\">gYw</td>';\n				})\n\n				string += '</tr>';\n			})\n			string += '</table>';\n\n			string += '<br />';\n			string += '<p><span class=\"cyan\">ciembor</span>@browser <span class=\"cyan\">~</span>></p>';\n\n			$(this.el).html(string);\n		}\n\n	});\n\n	var SchemeCSSView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			this.model.bind('change', _.bind(this.render, this));\n			this.render();\n		},\n\n		render: function() {\n			var that = this;\n			$('#display').css('color', that.model.get('colors')['foreground']);\n			$('#display').css('background-color', that.model.get('colors')['background']);\n			_.each(COLOR_NAMES, function(name) {\n				$('.' + name).css('color', that.model.get('colors')[name]);\n				$('.bg-' + name).css('background-color', that.model.get('colors')[name]);\n			});\n		}\n\n	});\n\n	var SchemeGuakeView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#guake-button').hover(function() {\n				that.render();\n			});\n			$('#guake-button').focus(function() {\n				that.render();\n			});\n		},\n\n		render: function() {\n			var that = this;\n			var palette = [];\n			var colors = that.model.get(\"colors\");\n\n			// Duplicate: #ab1224 -> #abab12122424, which is the expected format\n			function gnomeColor(color) {\n				return color.toString().replace(/#(.{2})(.{2})(.{2})/, '#$1$1$2$2$3$3');\n			}\n\n			_.each(COLOR_NAMES, function(name) {\n				palette.push( gnomeColor(colors[name]) )\n			});\n\n			out = '#!/bin/bash \\n\\n';\n			out += '# Save this script into set_colors.sh, make this file executable and run it: \\n';\n			out += '# \\n';\n			out += '# $ chmod +x set_colors.sh \\n';\n			out += '# $ ./set_colors.sh \\n';\n			out += '# \\n';\n			out += '# Alternatively copy lines below directly into your shell. \\n\\n';\n\n			out += \"gconftool-2 -s -t string /apps/guake/style/background/color '\" + gnomeColor(colors[\"background\"]) + \"'\" +'\\n';\n			out += \"gconftool-2 -s -t string /apps/guake/style/font/color '\" + gnomeColor(colors[\"foreground\"]) + \"'\" + '\\n';\n			out += \"gconftool-2 -s -t string /apps/guake/style/font/palette '\" + palette.join(\":\") + \"'\" + '\\n';\n\n			$('#guake-button').attr('href', 'data:text/plain,' + encodeURIComponent(out));\n		}\n\n	});\n\n	var SchemeGnomeTerminalView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#gnome-terminal-button').hover(function() {\n				that.render();\n			});\n			$('#gnome-terminal-button').focus(function() {\n				that.render();\n			});\n		},\n\n		render: function() {\n			var that = this;\n			var palette = [];\n			var colors = that.model.get(\"colors\");\n\n			// Duplicate: #ab1224 -> #abab12122424, which is the expected format\n			function gnomeColor(color) {\n				return color.toString().replace(/#(.{2})(.{2})(.{2})/, '#$1$1$2$2$3$3');\n			}\n\n			_.each(COLOR_NAMES, function(name) {\n				if (0 !== name.indexOf('bright_')) {\n					palette.push( gnomeColor(colors[name]) );\n				}	\n			});\n			\n			_.each(COLOR_NAMES, function(name) {\n				if (0 === name.indexOf('bright_')) {\n					palette.push( gnomeColor(colors[name]) );\n				}	\n			});\n\n			out = '#!/bin/bash \\n\\n';\n			out += '# Save this script into set_colors.sh, make this file executable and run it: \\n';\n			out += '# \\n';\n			out += '# $ chmod +x set_colors.sh \\n';\n			out += '# $ ./set_colors.sh \\n';\n			out += '# \\n';\n			out += '# Alternatively copy lines below directly into your shell. \\n\\n';\n\n			out += \"gconftool-2 --set /apps/gnome-terminal/profiles/Default/use_theme_background --type bool false \\n\";\n			out += \"gconftool-2 --set /apps/gnome-terminal/profiles/Default/use_theme_colors --type bool false \\n\";\n			out += \"gconftool-2 -s -t string /apps/gnome-terminal/profiles/Default/background_color '\" + gnomeColor(colors[\"background\"]) + \"'\" +'\\n';\n			out += \"gconftool-2 -s -t string /apps/gnome-terminal/profiles/Default/foreground_color '\" + gnomeColor(colors[\"foreground\"]) + \"'\" + '\\n';\n			out += \"gconftool-2 -s -t string /apps/gnome-terminal/profiles/Default/palette '\" + palette.join(\":\") + \"'\" + '\\n';\n\n			$('#gnome-terminal-button').attr('href', 'data:text/plain,' + encodeURIComponent(out));\n		}\n\n	});\n\n	var SchemeKonsoleView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#konsole-button').hover(function() {\n				that.render();\n			});\n			$('#konsole-button').focus(function() {\n				that.render();\n			});\n		},\n\n		colorRgb: function(context, color) {\n			var rgbArray = context.model.get(\"colors\")[color].toRgb();\n			return rgbArray[0] + ',' + rgbArray[1] + ',' + rgbArray[2];\n		},\n\n		render: function() {\n			var that = this;\n			var out = '';\n			var counter = 0;\n			var tpf = \"Transparency=false\" + '\\n' + '\\n';\n			var name = '4bit-' + that.model.get(\"colors\")[\"foreground\"] + \"-on-\" + that.model.get(\"colors\")[\"background\"];\n			name = name.replace(/#/g,'');\n\n			out += '# --- ~/.kde/share/apps/konsole/NAME.colorscheme -------------------------------\\n';\n			out += '# ------------------------------------------------------------------------------\\n';\n			out += '# --- generated with 4bit Terminal Color Scheme Designer -----------------------\\n';\n			out += '# ------------------------------------------------------------------------------\\n';\n			out += '# --- http://ciembor.github.com/4bit -------------------------------------------\\n';\n			out += '# ------------------------------------------------------------------------------\\n\\n';\n\n			out += '# --- special colors ---\\n\\n';\n			out += '[Background]\\n';\n			out += 'Color='	+ that.colorRgb(that, \"background\") + '\\n';\n			out += tpf;\n			out += '[BackgroundIntense]\\n';\n			out += 'color='	+ that.colorRgb(that, \"background\") + '\\n';\n			out += tpf;\n			out += '[Foreground]\\n';\n			out += 'Color='	+ that.colorRgb(that, \"foreground\") + '\\n';\n			out += tpf;\n			out += '[ForegroundIntense]\\n';\n			out += 'Color='	+ that.colorRgb(that, \"foreground\") + '\\n';\n			out += 'Bold=true\\n';\n			out += tpf;\n\n			out += '# --- standard colors ---\\n\\n';\n			_.each(COLOR_NAMES, function(name) {\n				var number = counter / 2;\n\n				if (0 === name.indexOf('bright_')) {\n					number += 7.5;\n				}\n				if (number > 7) {\n					colorsuffix = number % 8 + \"Intense\";\n				} else {\n					colorsuffix = number % 8;\n				}\n				out += '[Color' + colorsuffix + ']\\n';\n				out += 'Color=' + that.colorRgb(that, name) + '\\n';\n				out += tpf;\n				counter++;\n			});\n\n			out += '# --- general options ---\\n\\n';\n			out += '[General]\\nDescription=' + name + '\\nOpacity=1\\n';\n\n			$('#konsole-button').attr('href', 'data:text/plain,' + encodeURIComponent(out));\n		}\n\n	});\n\n	var SchemeITerm2View = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#iterm2-button').hover(function() {\n				that.render();\n			});\n			$('#iterm2-button').focus(function() {\n				that.render();\n			});\n		},\n\n		colorRgb: function(context, color) {\n			var rgbArray = context.model.get(\"colors\")[color].toRgb();\n			return rgbArray[0] + ',' + rgbArray[1] + ',' + rgbArray[2];\n		},\n\n		colorKeyDict: function(context, color, name) {\n			var rgbArray = context.model.get(\"colors\")[color].toRgb();\n			var out = '';\n			out += '	<key>'+name+' Color</key>\\n';\n			out += '	<dict>\\n';\n			out += '		<key>Blue Component</key>\\n';\n			out += '		<real>'+rgbArray[2]/255+'</real>\\n';\n			out += '		<key>Green Component</key>\\n';\n			out += '		<real>'+rgbArray[1]/255+'</real>\\n';\n			out += '		<key>Red Component</key>\\n';\n			out += '		<real>'+rgbArray[0]/255+'</real>\\n';\n			out += '	</dict>\\n';\n			return out;\n		},\n\n		render: function() {\n			var that = this;\n			var out = '';\n			var counter = 0;\n			var name = '4bit-' + that.model.get(\"colors\")[\"foreground\"] + \"-on-\" + that.model.get(\"colors\")[\"background\"];\n			name = name.replace(/#/g,'');\n\n			out += '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n';\n			out += '<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\\n';\n			out += '\\n<!--\\n\\n';\n			out += '      Save this file to '+name+'.itermcolors                                    \\n';\n			out += '      and load it with iTerm2 Preferences panel                                 \\n';\n			out += '                                                                                \\n';\n			out += '      generated with 4bit Terminal Color Scheme Designer                        \\n';\n			out += '                                                                                \\n';\n			out += '      http://ciembor.github.com/4bit                                            \\n';\n			out += '                                                                                \\n';\n			out += '-->\\n\\n';\n\n			out += '<plist version=\"1.0\">\\n';\n			out += '<dict>\\n';\n\n			out += '<!-- special colors -->\\n';\n			out += that.colorKeyDict(that, \"background\", \"Background\");\n			out += that.colorKeyDict(that, \"foreground\", \"Foreground\");\n			out += that.colorKeyDict(that, \"foreground\", \"Cursor\");\n			out += that.colorKeyDict(that, \"background\", \"Cursor Text\");\n\n			out += '<!-- standard colors -->\\n';\n\n			_.each(COLOR_NAMES, function(name) {\n				var number = counter / 2;\n\n				if (0 === name.indexOf('bright_')) {\n					number += 7.5;\n				}\n\n				out += '	<!-- ' + name + ' -->\\n';\n				out += that.colorKeyDict(that, name, \"Ansi \"+number);\n\n				counter += 1;\n			});\n\n			out += '</dict>\\n';\n			out += '</plist>\\n';\n			out += '\\n';\n\n			$('#iterm2-button').attr('href', 'data:text/plain,' + encodeURIComponent(out));\n		}\n\n	});\n\n	var SchemeXresourcesView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#xresources-button').hover(function() {\n				that.render();\n			});\n			$('#xresources-button').focus(function() {\n				that.render();\n			});\n		},\n\n		render: function() {\n			var that = this;\n			var xresources = '';\n			var counter = 0;\n\n			xresources += '! --- ~/.Xresources ------------------------------------------------------------\\n';\n			xresources += '! ------------------------------------------------------------------------------\\n';\n			xresources += '! --- generated with 4bit Terminal Color Scheme Designer -----------------------\\n';\n			xresources += '! ------------------------------------------------------------------------------\\n';\n			xresources += '! --- http://ciembor.github.com/4bit -------------------------------------------\\n';\n			xresources += '! ------------------------------------------------------------------------------\\n\\n';\n\n			xresources += '! --- special colors ---\\n\\n';\n			xresources += '*background: ' + that.model.get('colors')['background'] + '\\n';\n			xresources += '*foreground: ' + that.model.get('colors')['foreground'] + '\\n\\n';\n\n			xresources += '! --- standard colors ---\\n\\n';\n			_.each(COLOR_NAMES, function(name) {\n				var number = counter / 2;\n\n				if (0 === name.indexOf('bright_')) {\n					number += 7.5;\n				}\n\n				xresources += '! ' + name + '\\n';\n				xresources += '*color' + number + ': ' + that.model.get('colors')[name] + '\\n\\n';\n				counter += 1;\n			});\n\n			xresources += '\\n! ------------------------------------------------------------------------------\\n';\n			xresources += '! --- end of terminal colors section -------------------------------------------\\n';\n			xresources += '! ------------------------------------------------------------------------------\\n\\n';\n\n			$('#xresources-button').attr('href', 'data:text/plain,' + encodeURIComponent(xresources));\n		}\n\n	});\n\n	var SchemeXfceTerminalView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#xfce-terminal-button').hover(function() {\n				that.render();\n			});\n			$('#xfce-terminal-button').focus(function() {\n				that.render();\n			});\n		},\n\n		render: function() {\n			var that = this;\n			var terminalrc = '[Configuration]\\n';\n			var counter = 1;\n\n			// special colors\n			terminalrc += 'ColorBackground=' + that.model.get('colors')['background'] + '\\n';\n			terminalrc += 'ColorForeground=' + that.model.get('colors')['foreground'] + '\\n';\n			terminalrc += 'ColorCursor=' + that.model.get('colors')['foreground'] + '\\n';\n\n			// standard colors\n			_.each(COLOR_NAMES, function(name) {\n				var number = counter / 2 + 0.5;\n\n				if (0 === name.indexOf('bright_')) {\n					number += 7.5;\n				}\n\n				terminalrc += 'ColorPalette' + number + '=' + that.model.get('colors')[name] + '\\n';\n				counter += 1;\n			});\n\n			$('#xfce-terminal-button').attr('href', 'data:text/plain,' + encodeURIComponent(terminalrc));\n		}\n\n	});\n\n	var SchemeMinttyView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#mintty-button').hover(function() {\n				that.render();\n			});\n			$('#mintty-button').focus(function() {\n				that.render();\n			});\n		},\n\n		colorRgb: function(context, color) {\n			var rgbArray = context.model.get(\"colors\")[color].toRgb();\n			return rgbArray[0] + ',' + rgbArray[1] + ',' + rgbArray[2];\n		},\n\n		render: function() {\n			function MinttyName(name) {\n				if (0 === name.indexOf('bright_')) {\n					name = name.substring('bright_'.length);\n					return 'Bold' + name.charAt(0).toUpperCase() + name.slice(1);\n				} else {\n					return name.charAt(0).toUpperCase() + name.slice(1);\n				}\n			}\n\n			var that = this;\n			var out = '';\n\n			out += 'BackgroundColour='	+ that.colorRgb(that, \"background\") + '\\n';\n			out += 'ForegroundColour='	+ that.colorRgb(that, \"foreground\") + '\\n';\n			out += 'CursorColour='	+ that.colorRgb(that, \"foreground\") + '\\n';\n\n			_.each(COLOR_NAMES, function(name) {\n				out += MinttyName(name) + '=' + that.colorRgb(that, name) + '\\n';\n			});\n\n			$('#mintty-button').attr('href', 'data:text/plain,' + encodeURIComponent(out));\n		}\n\n	});\n\n	var SchemePuttyView = Backbone.View.extend({\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n			var that = this;\n			$('#putty-button').hover(function() {\n				that.render();\n			});\n			$('#putty-button').focus(function() {\n				that.render();\n			});\n		},\n\n		colorRgb: function(context, color) {\n			var rgbArray = context.model.get(\"colors\")[color].toRgb();\n			return rgbArray[0] + ',' + rgbArray[1] + ',' + rgbArray[2];\n		},\n\n		render: function() {\n			var that = this;\n			var out = '';\n			var counter = 6;\n			out += 'Windows Registry Editor Version 5.00 \\n\\n';\n			out += '[HKEY_CURRENT_USER\\\\Software\\\\SimonTatham\\\\PuTTY\\\\Sessions\\\\Default%20Settings]\\n';\n\n			out += '\"Colour0\"=\"' + that.colorRgb(that, \"foreground\") + '\"\\n';\n			out += '\"Colour1\"=\"' + that.colorRgb(that, \"foreground\") + '\"\\n';\n			out += '\"Colour2\"=\"' + that.colorRgb(that, \"background\") + '\"\\n';\n			out += '\"Colour3\"=\"' + that.colorRgb(that, \"background\") + '\"\\n';\n			out += '\"Colour4\"=\"' + that.colorRgb(that, \"background\") + '\"\\n';\n			out += '\"Colour5\"=\"' + that.colorRgb(that, \"foreground\") + '\"\\n';\n\n			_.each(COLOR_NAMES, function(name) {\n				out += '\"Colour' + counter + '\"=\"' + that.colorRgb(that, name) + '\"\\n';\n				counter += 1;\n			});\n\n			$('#putty-button').attr('href', 'data:text/plain,' + encodeURIComponent(out));\n		}\n\n	});\n\n	var ControlsView = Backbone.View.extend({\n\n		el: $('#controls'),\n\n		model: scheme,\n\n		initialize: function() {\n			_.bindAll(this, 'render');\n\n			var that = this;\n\n			$(\"#hue-slider\").slider({\n				value: that.model.get('hue') + 30,\n				min: 0,\n				max: 60,\n				step: 1,\n				slide: function( event, ui ) {\n					that.model.setHue((ui.value - 30) - that.model.get('hue'));\n				}\n			});\n\n			$(\"#saturation-slider\").slider({\n				value: that.model.get('saturation') * 256,\n				min: 0,\n				max: 256,\n				step: 1,\n				slide: function( event, ui ) {\n					that.model.setSaturation(ui.value / 256);\n				}\n			});\n\n			$(\"#lightness-slider\").slider({\n				range: true,\n				values: [that.model.get('normal_lightness') * 256, that.model.get('bright_lightness') * 256],\n				min: 0,\n				max: 256,\n				step: 1,\n				slide: function( event, ui ) {\n					that.model.setLightness('normal', ui.values[0] / 256);\n					that.model.setLightness('bright', ui.values[1] / 256);\n				}\n			});\n\n			$(\"#black-slider\").slider({\n				range: true,\n				values: [\n					that.model.get('colors').black.getLightness() * 256,\n					that.model.get('colors').bright_black.getLightness() * 256\n				],\n				min: 0,\n				max: 128,\n				step: 1,\n				slide: function( event, ui ) {\n					that.model.setLightness('black', ui.values[0] / 256);\n					that.model.setLightness('bright_black', ui.values[1] / 256);\n				}\n			});\n\n			$(\"#white-slider\").slider({\n				range: true,\n				values: [\n					that.model.get('colors').white.getLightness() * 256,\n					that.model.get('colors').bright_white.getLightness() * 256\n				],\n				min: 128,\n				max: 256,\n				step: 1,\n				slide: function( event, ui ) {\n					that.model.setLightness('white', ui.values[0] / 256);\n					that.model.setLightness('bright_white', ui.values[1] / 256);\n				}\n			});\n\n			$('#dye-colorpicker').colorPicker({\n				format: 'hsla',\n				size: 90,\n				colorChange: function(e, ui) {\n					var pattern, _ref, h, s, l, a;\n					var type = $('input[name=dye]:checked').val()\n					pattern = /^hsla\\((\\d+),\\s+(\\d+(?:.\\d+)?)%,\\s+(\\d+(?:.\\d+)?)%,\\s+(\\d+(?:.\\d+)?)\\)$/;\n					_ref = pattern.exec(ui.color), h = _ref[1], s = _ref[2] / 100, l = _ref[3] / 100, a = _ref[4];\n\n					switch(type) {\n						case 'none':\n							that.model.dye(0, 0, 0, 0, 'all');\n							break;\n						case 'color':\n							that.model.dye(0, 0, 0, 0, 'achromatic');\n							that.model.dye(h, s, l, a, 'color');\n							break;\n						case 'achromatic':\n							that.model.dye(0, 0, 0, 0, 'color');\n							that.model.dye(h, s, l, a, 'achromatic');\n							break;\n						case 'all':\n							that.model.dye(h, s, l, a, 'all');\n							break;\n					}\n				}\n			});\n\n			$('#dye-colorpicker').colorPicker('setColor', 210, 50, 50, 0.2);\n\n			$(\"input[name=dye]\").change(function() {\n				$('#dye-colorpicker').change();\n			});\n\n			$('#background-colorpicker').colorPicker({\n				format: 'hsl',\n				size: 90,\n				colorChange: function(e, ui) {\n					var pattern, _ref, h, s, l;\n					var option = $('input[name=background]:checked').val()\n					pattern = /^hsl\\((\\d+),\\s+(\\d+(?:.\\d+)?)%,\\s+(\\d+(?:.\\d+)?)%\\)$/;\n					_ref = pattern.exec(ui.color), h = _ref[1], s = _ref[2] / 100, l = _ref[3] / 100;\n					that.model.setBackground(h, s, l, option);\n				}\n			});\n\n			$('#background-colorpicker').colorPicker('setColor', 210, 50, 10);\n\n			$(\"input[name=background]\").change(function() {\n				$('#background-colorpicker').change();\n			});\n\n			$('#background .alpha .ui-draggable').removeClass('ui-draggable handle');\n\n			$('#foreground-colorpicker').colorPicker({\n				format: 'hsl',\n				size: 90,\n				colorChange: function(e, ui) {\n					var pattern, _ref, h, s, l;\n					var option = $('input[name=foreground]:checked').val()\n					pattern = /^hsl\\((\\d+),\\s+(\\d+(?:.\\d+)?)%,\\s+(\\d+(?:.\\d+)?)%\\)$/;\n					_ref = pattern.exec(ui.color), h = _ref[1], s = _ref[2] / 100, l = _ref[3] / 100;\n					that.model.setForeground(h, s, l, option);\n				}\n			});\n\n			$('#foreground-colorpicker').colorPicker('setColor', 210, 50, 90);\n\n			$(\"input[name=foreground]\").change(function() {\n				$('#foreground-colorpicker').change();\n			});\n\n			$('#foreground .alpha .ui-draggable').removeClass('ui-draggable handle');\n\n			$(\".radio-group\").buttonsetv();\n\n		}\n\n	});\n\n	var schemeView = new SchemeView();\n	var schemeCSSView = new SchemeCSSView();\n	var schemeXresourcesView = new SchemeXresourcesView();\n	var schemeKonsoleView = new SchemeKonsoleView();\n	var schemeMinttyView = new SchemeMinttyView();\n	var schemeITerm2View = new SchemeITerm2View();\n	var schemeGuakeView = new SchemeGuakeView();\n	var schemeGnomeTerminalView = new SchemeGnomeTerminalView();\n	var schemeXfceTerminalView = new SchemeXfceTerminalView();\n	var schemePuttyView = new SchemePuttyView();\n	var controlsView = new ControlsView();\n\n	// basic layout behaviour /////////////////////////////\n\n	$('footer p').hover(\n		function() {\n			$(this).find('a').addClass('blue');\n			schemeCSSView.render();\n		},\n		function() {\n			$(this).find('a').removeClass('blue');\n			$(this).find('a').removeAttr(\"style\");\n		}\n	);\n\n	$(window).bind(\"load\", function() {\n		$('#display').css('visibility', 'visible');\n		$('#controls').css('visibility', 'visible');\n		$('#skews').fadeIn(700);\n		$('#app').animate({opacity: 1}, 700);\n		$(\"#get-scheme-button\").click(function(button) {\n			$(\"#dialog-modal\").dialog({\n				height: 90 + 50 * $('.get-scheme-link').length,\n				width: 450,\n				modal: true,\n				draggable: false,\n				resizable: false\n			});\n		});\n	});\n\n}\n\n",
+					"file": "/home/ciembor/projekty/4bit/js/main.js",
+					"file_size": 30969,
+					"file_write_time": 1355785608000000,
+					"settings":
+					{
+						"buffer_size": 30970,
+						"line_ending": "Unix"
+					}
+				},
+				{
+					"contents": "bash: w tej powłoce nie ma kontroli zadań\n[ciembor@peace~]$ ks\nbash: ks: nie znaleziono polecenia\n[ciembor@peace~]$ ls\n=\n▄██\n0\n=0\n1\n4bit\n=50\n=52\na\naa\na.avi\na.c\nactive.png\na.hs\na.mgep\na.mgep.idx\na.mpeg\na.mpeg.idx\nappjs\naside.png\nauster.png\nauster.xcf\naus.xcf\nbabia.jpeg\nbasecamp.png\nBez nazwy.xcf\nbu\nchrome.jpg\nclosure\nclosure-library-read-only\ncolors\ncolors.sh\ncurl_backup\n=cur_temp\ncur_temp\ndb_bla\nDesktop\ndo\nDocuments\nDownloads\nDropbox\nepi.pdf\nepi.png\nepi.xcf\nf\nfais.odt\nfais.pdf\nfollow_button_dark.png\nghostrider.png\ngithub_local_user_score\ngithub.py\ngit.sh\ngradient.png\nhi.rb\nhover.png\nindex.html\nindex.html.1\nkolokwium\nKOMUNIKACJA WIZUALNA\nkw\nlauncher.jar\nless\nlesscss.org\nlibtermkey-0.15b.tar.gz\nmessage\nmetaconfig\nmusic_for_programming_12-forgotten_light.mp3\nmusic_for_programming_4-com_truise.mp3\nmuzyka.txt\nnatural_pearls.jpg\nnetia.txt\nnode_modules\norganizer.ods\nosx.hex\noutput.txt\nparadigms.jpg\nperl-poe-wheel-termkey\nperl-term-readkey\npodanie.doc\npodanie.pdf\npolish-github-rank.git\nprojekty\npublic_html\nPytania.odt\npython-github3\nrefer..odp\nremora\nset_colors.sh\nshortener\nsukces.png\ntcsd.jpg\ntcsd.png\nTemp1_VC2012.zip\ntemperature.sh~\nterminalhero.png\nTerm-TermKey-0.13.tar.gz\ntest\ntest-0000.mpeg\nth1.mpeg\nth2.mpeg\nth3.mpeg\nTmForever\ntmp\ntorrent\nwierzba.wzks.uj.edu.pl\n[ciembor@peace~]$ whoami\nciembor\n[ciembor@peace~]$ git status\nfatal: Not a git repository (or any parent up to mount point /home)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).\n[ciembor@peace~]$ ps\n  PID TTY          TIME CMD\n  675 ?        00:00:10 dropbox\n 4233 ?        00:00:00 ck-launch-sessi\n 4246 ?        00:00:00 dbus-launch\n 4247 ?        00:00:01 dbus-daemon\n 4252 ?        00:24:31 pulseaudio\n 4262 ?        00:00:00 gconf-helper\n 4264 ?        00:00:00 gconfd-2\n 4268 ?        00:00:10 tint2\n 4269 ?        00:00:41 pidgin\n 4270 ?        00:10:26 skype\n 4271 ?        00:00:00 setxkbmap <defunct>\n 4272 ?        00:00:00 synergys <defunct>\n 4273 ?        00:00:03 temperature.sh\n 4278 ?        00:02:03 synergys\n 4290 ?        00:00:00 fusion-icon\n 4328 ?        00:00:00 gvfsd\n 4330 ?        00:00:00 gvfs-fuse-daemo\n 4358 ?        00:23:50 compiz\n 4364 ?        00:00:11 dunst\n 4382 ?        00:00:12 emerald\n 4392 ?        00:33:06 chrome\n 4397 ?        00:00:14 chrome\n 4399 ?        00:00:00 chrome-sandbox\n 4401 ?        00:00:00 chrome\n 4405 ?        00:00:00 nacl_helper_boo\n 4474 ?        00:02:11 chrome\n 4481 ?        00:00:06 chrome\n 4505 ?        00:16:28 chrome\n 4518 ?        00:21:27 chrome\n 9679 ?        00:00:59 nautilus\n 9687 ?        00:00:00 gvfs-udisks2-vo\n 9690 ?        00:00:00 gvfsd-trash\n 9693 ?        00:00:00 dconf-service\n 9699 ?        00:00:00 gvfsd-burn\n10006 ?        00:00:00 gvfsd-metadata\n10684 ?        00:00:00 gvfsd-http\n14745 ?        00:00:56 thunderbird\n14757 ?        00:00:00 at-spi-bus-laun\n18374 ?        00:06:21 chrome\n19485 ?        00:02:15 chrome\n20310 ?        00:00:00 services.exe\n20323 ?        00:00:00 plugplay.exe\n20330 ?        00:00:00 explorer.exe\n21081 ?        00:12:36 chrome\n22470 ?        00:00:00 aptana\n22472 ?        00:00:00 AptanaStudio3\n22485 ?        00:03:40 java\n22630 ?        00:00:00 redtty\n22662 ?        00:00:38 chrome\n23035 ?        00:00:03 terminal\n23036 ?        00:00:00 gnome-pty-helpe\n23041 ?        00:00:00 fishd\n23296 ?        00:01:11 chrome\n26008 ?        00:00:09 chrome\n26586 ?        00:00:19 sublime_text\n26605 ?        00:05:25 fish\n26619 ?        00:05:06 fish\n26812 ?        00:00:00 bash\n26826 ?        00:00:00 sleep\n26828 ?        00:00:00 ps\n[ciembor@peace~]$ ",
+					"settings":
+					{
+						"buffer_size": 3587,
+						"line_ending": "Unix",
+						"name": "*REPL* [bash -i]",
+						"scratch": true
+					}
+				},
+				{
+					"file": "/home/ciembor/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+					"settings":
+					{
+						"buffer_size": 13159,
+						"line_ending": "Unix"
+					}
+				}
+			],
+			"build_system": "",
+			"command_palette":
+			{
+				"height": 72.0,
+				"selected_items":
+				[
+					[
+						"install",
+						"Package Control: Install Package"
+					],
+					[
+						"sublim",
+						"SublimePTY"
+					],
+					[
+						"SublimeP",
+						"SublimePTY"
+					],
+					[
+						"Package Control: ",
+						"Package Control: Install Package"
+					],
+					[
+						"install ",
+						"Package Control: Install Package"
+					],
+					[
+						"pack",
+						"Package Control: Install Package"
+					]
+				],
+				"width": 467.0
+			},
+			"console":
+			{
+				"height": 207.0
+			},
+			"distraction_free":
+			{
+				"menu_visible": true,
+				"show_minimap": false,
+				"show_open_files": false,
+				"show_tabs": false,
+				"side_bar_visible": false,
+				"status_bar_visible": false
+			},
+			"file_history":
+			[
+				"/home/ciembor/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+				"/home/ciembor/.config/sublime-text-2/Packages/Theme - Default/Default.sublime-theme",
+				"/home/ciembor/.config/sublime-text-2/Packages/Color Scheme - Default/Monokai-darker.tmTheme",
+				"/home/ciembor/.config/sublime-text-2/Packages/Color Scheme - Default/Monokai.tmTheme",
+				"/home/ciembor/projekty/ascii-paint/js/config.js",
+				"/home/ciembor/projekty/WykopAnalytics/frontend/charts.js",
+				"/home/ciembor/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+				"/home/ciembor/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap"
+			],
+			"find":
+			{
+				"height": 34.0
+			},
+			"find_in_files":
+			{
+				"height": 0.0,
+				"where_history":
+				[
+				]
+			},
+			"find_state":
+			{
+				"case_sensitive": false,
+				"find_history":
+				[
+					"_",
+					"repl_view_settings",
+					"_",
+					"translate_tabs_to_spaces",
+					"_",
+					"translate_tabs_to_spaces",
+					"_",
+					"bright",
+					"config",
+					"false",
+					"49483E",
+					"key",
+					"tab\n\ntab",
+					"q4",
+					"file",
+					"tree"
+				],
+				"highlight": true,
+				"in_selection": false,
+				"preserve_case": false,
+				"regex": false,
+				"replace_history":
+				[
+				],
+				"reverse": false,
+				"show_context": true,
+				"use_buffer2": true,
+				"whole_word": false,
+				"wrap": true
+			},
+			"folders":
+			[
+				{
+					"path": "/home/ciembor/projekty"
+				},
+				{
+					"path": "/home/ciembor/projekty/github-rank"
+				}
+			],
+			"groups":
+			[
+				{
+					"selected": 7,
+					"sheets":
+					[
+						{
+							"buffer": 0,
+							"file": "/home/ciembor/.config/sublime-text-2/Packages/Terminal/Terminal.py",
+							"settings":
+							{
+								"buffer_size": 5242,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										131,
+										131
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/Python/Python.tmLanguage",
+									"tab_size": 4,
+									"translate_tabs_to_spaces": true
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 1,
+							"file": "/home/ciembor/.config/sublime-text-2/Packages/Git/Git.sublime-settings",
+							"settings":
+							{
+								"buffer_size": 1367,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										624,
+										624
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/JavaScript/JSON.tmLanguage",
+									"translate_tabs_to_spaces": false
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 2,
+							"file": "/home/ciembor/.config/sublime-text-2/Packages/Terminal/Default (Linux).sublime-keymap",
+							"settings":
+							{
+								"buffer_size": 139,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										0,
+										0
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/JavaScript/JSON.tmLanguage"
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 3,
+							"file": "/home/ciembor/.config/sublime-text-2/Packages/CTags/Default.sublime-keymap",
+							"settings":
+							{
+								"buffer_size": 1514,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										790,
+										790
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/JavaScript/JSON.tmLanguage",
+									"tab_size": 2,
+									"translate_tabs_to_spaces": true
+								},
+								"translation.x": 0.0,
+								"translation.y": 114.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 4,
+							"file": "/home/ciembor/.config/sublime-text-2/Packages/CTags/Default.sublime-mousemap",
+							"settings":
+							{
+								"buffer_size": 254,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										1,
+										1
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/JavaScript/JSON.tmLanguage",
+									"translate_tabs_to_spaces": false
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 5,
+							"file": "/home/ciembor/.config/sublime-text-2/Packages/SublimeREPL/SublimeREPL.sublime-settings",
+							"settings":
+							{
+								"buffer_size": 1955,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										1626,
+										1626
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/JavaScript/JSON.tmLanguage",
+									"translate_tabs_to_spaces": false
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 6,
+							"file": "/home/ciembor/projekty/4bit/less/main.less",
+							"settings":
+							{
+								"buffer_size": 12787,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										2694,
+										2694
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/LESS/LESS.tmLanguage",
+									"translate_tabs_to_spaces": false
+								},
+								"translation.x": 0.0,
+								"translation.y": 1824.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 7,
+							"file": "/home/ciembor/projekty/4bit/js/main.js",
+							"settings":
+							{
+								"buffer_size": 30970,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										1204,
+										1204
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+									"translate_tabs_to_spaces": false
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						}
+					]
+				},
+				{
+					"selected": 1,
+					"sheets":
+					[
+						{
+							"buffer": 8,
+							"settings":
+							{
+								"buffer_size": 3587,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										409,
+										409
+									]
+								],
+								"settings":
+								{
+									"auto_complete": true,
+									"auto_indent": false,
+									"detect_indentation": false,
+									"gutter": false,
+									"history_arrows": true,
+									"indent_subsequent_lines": false,
+									"line_numbers": false,
+									"repl": true,
+									"repl_external_id": null,
+									"repl_id": "4e8453c0ff804b619bb789c507702c6e",
+									"smart_indent": false,
+									"syntax": "Packages/Text/Plain text.tmLanguage",
+									"translate_tabs_to_spaces": false
+								},
+								"translation.x": 0.0,
+								"translation.y": 475.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						},
+						{
+							"buffer": 9,
+							"file": "/home/ciembor/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+							"settings":
+							{
+								"buffer_size": 13159,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										7413,
+										7413
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/JavaScript/JSON.tmLanguage",
+									"tab_size": 4,
+									"translate_tabs_to_spaces": true
+								},
+								"translation.x": 0.0,
+								"translation.y": 3037.0,
+								"zoom_level": 1.0
+							},
+							"type": "text"
+						}
+					]
+				}
+			],
+			"incremental_find":
+			{
+				"height": 0.0
+			},
+			"input":
+			{
+				"height": 34.0
+			},
+			"layout":
+			{
+				"cells":
+				[
+					[
+						0,
+						1,
+						1,
+						2
+					],
+					[
+						0,
+						0,
+						1,
+						1
+					]
+				],
+				"cols":
+				[
+					0.0,
+					1.0
+				],
+				"rows":
+				[
+					0.0,
+					0.324081089883,
+					1.0
+				]
+			},
+			"menu_visible": true,
+			"position": "0,1,0,0,0,0,30,1198,1340,1200,1600",
+			"replace":
+			{
+				"height": 0.0
+			},
+			"save_all_on_build": true,
+			"select_file":
+			{
+				"height": 0.0,
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_project":
+			{
+				"height": 0.0,
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"show_minimap": true,
+			"show_open_files": true,
+			"show_tabs": true,
+			"side_bar_visible": true,
+			"side_bar_width": 284.0,
+			"status_bar_visible": true,
+			"window_id": 1,
+			"workspace_name": ""
+		}
+	],
+	"workspaces":
+	{
+		"recent_workspaces":
+		[
+		]
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"installed_packages":
+	[
+		"Backbone.js",
+		"CoffeeScript",
+		"CTags",
+		"Git",
+		"Haml",
+		"HTML5",
+		"LESS",
+		"Origami",
+		"Package Control",
+		"Sass",
+		"sublime-github",
+		"SublimeREPL",
+		"Terminal",
+		"Theme - Soda"
+	]
+}

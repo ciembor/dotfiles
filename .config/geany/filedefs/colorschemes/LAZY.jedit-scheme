@@ -1,0 +1,21 @@
+# Converted from Textmate theme LAZY using Coloration v0.2.5 (http://github.com/sickill/coloration)
+
+scheme.name=LAZY
+view.fgColor=\#000000
+view.bgColor=\#ffffff
+view.caretColor=\#7c7c7c
+view.selectionColor=\#e3fc8d
+view.eolMarkerColor=\#b6b6b6
+view.lineHighlightColor=\#f6fdcd
+view.style.comment1=color\:\#8c868f style\:
+view.style.literal1=color\:\#409b1c style\:
+view.style.label=color\:\#3b5bb5 style\:
+view.style.digit=color\:\#3b5bb5 style\:
+view.style.keyword1=color\:\#ff7800 style\:
+view.style.keyword2=color\:\#3b5bb5 style\:
+view.style.keyword3=color\:\#3b5bb5 style\:
+view.style.keyword4=color\:\#000000 style\:
+view.style.operator=color\:\#ff7800 style\:
+view.style.function=color\:\#3b5bb5 style\:
+view.style.literal3=color\:\#409b1c style\:
+view.style.markup=color\:\#3a4a64 style\:

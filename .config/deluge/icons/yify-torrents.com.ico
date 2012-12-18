@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>404 Page Not Found - YIFY Torrents</title>
+	
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<link rel="shortcut icon" href="http://www.yify-torrents.com/yify.ico" />
+	
+	<link rel="stylesheet" type="text/css" href="http://www.yify-torrents.com/css/styles.css" />
+	<link rel="stylesheet" type="text/css" href="http://www.yify-torrents.com/css/colorbox.css" />
+	
+	<script src="http://www.yify-torrents.com/js/jquery-1.6.1.min.js" type="text/javascript"></script>
+	<script src="http://www.yify-torrents.com/js/jquery.validate.min.js" type="text/javascript"></script>
+	<script src="http://www.yify-torrents.com/js/jquery.colorbox-min.js" type="text/javascript"></script>
+	<script src="http://www.yify-torrents.com/js/form.js" type="text/javascript"></script>
+	<script src="http://www.yify-torrents.com/js/common.js" type="text/javascript"></script>
+	
+	<script>
+		var webRoot = 'http://www.yify-torrents.com/';
+		var IsLoggedIn = 0	</script>
+	
+	
+	
+		
+	<!--[if !IE]><!--><style type="text/css">#content input.field:focus, #content textarea:focus{border: 1px solid #47bc15 !important;}</style><![endif]-->
+	
+</head>
+<body>
+	
+	<div id="top-panel">
+		
+		<div id="panel">
+			<div class="content">
+				<div class="column">
+					<h2>Welcome to YIFY Torrents</h2>
+					<h4>Smallest movies at highest quality</h4>
+					<p>Account registration to YIFY torrents only takes a matter of seconds and grants you full access to all the features the YIFY Torrents website has to provide.</p>
+				</div>
+				
+				<div class="column">
+					<form action="http://www.yify-torrents.com/security/login" method="post" accept-charset="utf-8">
+<div class="hidden">
+<input type="hidden" name="ci_csrf_token" value="6e787bfbf45a8d618fa56ed11d3d820d" />
+</div>						<h2>Member Login</h2>
+						
+						<label>Username:</label> 
+						<input type="text" name="username" value="" class="field" maxlength="25" />						
+						<label>Password:</label> 
+						<input type="password" name="password" value="" class="field" maxlength="50" />						
+						<label><input type="checkbox" name="rememberme" value="remember" id="rememberme" /> &nbsp;Remember me</label>
+						
+						<input type="hidden" name="returnPage" value="favicon.ico" />
+						
+						<input type="submit" name="submit" value="Login" class="bt_login" /> 
+						<a class="lost-pwd" href="http://www.yify-torrents.com/recoverpass">Lost your password?</a> 
+					</form>					<span class="error"></span>
+				</div>
+				
+				<div class="column b-right">
+						<h2>Not a member yet? Sign Up!</h2>
+						<p>If you are not a member yet, please sign up with the button below.</p>
+						<a href="http://www.yify-torrents.com/register" class="bt_login">Sign Up</a>
+				</div>
+			</div>
+		</div>
+		
+		<div class="tab">
+			<div class="test" style="display: none; width: 100px; height: 100px;"></div>
+			<ul>
+				<li class="left"></li>
+				<li>Hello Guest!</li>
+				<li class="d-line">|</li>
+				<li id="toggle"> 
+					<a id="open" class="open" >Log In | Register</a> 
+					<a id="close" style="display: none;" class="close">Close Panel</a>			
+				</li>
+				<li class="right"></li>
+			</ul>
+			
+		</div>
+	</div>
+	
+	<div class="donate">
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7----- ">
+			<input type="submit" value="Donate" name="submit" class="donate-btn" />
+		</form>
+	</div>
+
+	<div id="wrapper">
+		
+		<div id="header">
+			
+			<a href="http://www.yify-torrents.com/home" id="logo"><img alt="Yif Torrents Logo" src="http://www.yify-torrents.com/images/logo.png" width="230" height="84" /></a>
+			
+			<div id="nav-wrapper">
+				<div class="nav-left"></div>
+				<div id="nav">
+					<span class="green-line"></span>
+					<ul>
+						<li><a href="http://www.yify-torrents.com/home">Home</a></li>
+						<li><a href="http://www.yify-torrents.com/browse-movie">Browse Movies</a></li>
+						<li><a href="http://chat.yify-torrents.com" target="_blank">Chat</a></li>
+						<li><a href="http://www.yify-torrents.com/VIP">VIP</a></li>
+						<li><a href="http://www.yify-torrents.com/store">Store</a></li>
+						<li><a href="http://www.yify-torrents.com/FAQ">FAQ</a></li>
+						<li><a href="http://www.yify-torrents.com/contact-us">Contact</a></li>
+					</ul>
+				</div>
+				<div class="nav-right"></div>
+			</div>
+			
+		</div>
+	
+
+	<div id="container" class="center">
+		<div id="content">
+			
+			<div class="col-left">
+				<h1>404 Page Not Found</h1>
+			
+				<p class="text thankyou">The page you requested was not found.</p>
+			</div>
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+		
+		<div id="footer">
+			<p>YIFY-Torrents &copy; 2012 | <a href="http://www.yify-torrents.com/privacy">Privacy</a></p>
+		</div>
+		
+	</div>
+	
+	<script type="text/javascript">
+	
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-25014739-1']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	
+	</script>	
+</body>
+</html> 
